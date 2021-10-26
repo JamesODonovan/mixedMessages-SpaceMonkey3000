@@ -44,11 +44,17 @@ const genItemFromArray = itemStat => {
 }
 
 const genItemsIteratively = array => {
+  //console.log(`GenItemsIteratively Input Array -> ${array}`)
   const itemObjectArray = [];
   for (item of array) {
-    itemObjectArray.push(genItemFromArray(item))
+    //console.log(item)
+    itemObject = genItemFromArray(item);
+    //console.log(itemObject);
+    itemObjectArray.push(itemObject);
   }
+  //console.log(`GenItemsIteratively -> Export ${itemObjectArray}`);
   return itemObjectArray;
+
 }
 
 const items = genItemsIteratively(itemInfo);
@@ -56,8 +62,8 @@ const items = genItemsIteratively(itemInfo);
 const randomLocation = locationPhrases[Math.floor(Math.random() * locationPhrases.length)];
 const randomScenario = scenarioPhrases[Math.floor(Math.random() * scenarioPhrases.length)];
 
-console.log(randomLocation);
-console.log(randomScenario);
+//console.log(randomLocation);
+//console.log(randomScenario);
 
 const rollItemRng = (rarityValue) => {
   const randomValue = Math.random();
@@ -69,16 +75,117 @@ const rollItemRng = (rarityValue) => {
   }
 }
 
-const getCurrentItems = () => {
+const getCurrentItems = (array) => {
   const currentItems = [];
 
-  for (item of items) {
+  for (item of array) {
     const hasItem = rollItemRng(item.rarity);
-    if (hasItem === True) {
+    if (hasItem === true) {
       currentItems.push(item)
     }
   }
+  //console.log(`getCurrentItems Export -> ${currentItems}`)
   return currentItems;
 }
 
-console.log(getCurrentItems())
+const sortItemsByType = itemArray => {
+  const weapons = [];
+  const largeItems = [];
+  const smallItems = [];
+
+  for (item of itemArray) {
+    if (item.type === 'Weapon') {
+      weapons.push(item);
+    }
+    if (item.type === "Large Item") {
+      largeItems.push(item);
+    }
+    if (item.type === "Small Item") {
+      smallItems.push(item)
+    }
+  }
+  sortedArray = [weapons, largeItems, smallItems]
+
+  //console.log(`sortItemsByType Export -> ${sortedArray}`)
+  return sortedArray;
+}
+
+const formatItemListString = (array) => {
+  formattedList = '';
+  //console.log(array);
+  for (let i = 0; i < array.length; i++) {
+    const currentItemName = array[i].name;
+  //  console.log(i)
+
+    if (i !== (array.length-1)) {
+      formattedList += (currentItemName + ", ")
+      //console.log(currentItemName);
+    }
+    else {
+      if (array.length === 1){
+        formattedList += (currentItemName + '.')
+      }
+      else {
+        formattedList += ('and a ' + currentItemName +".");
+      }
+    }
+  }
+  return formattedList;
+}
+
+const getItemPhrases = (itemsArray) => {
+  //console.log(itemsArray);
+  const weapons = itemsArray[0];
+  const largeItems = itemsArray[1];
+  const smallItems = itemsArray[2];
+  //console.log(`Weapons array: ${weapons}`);
+  //console.log(weapons === undefined)
+  //console.log(largeItems);
+  //console.log(smallItems);
+
+  let weaponsPhrase = "You are armed with a ";
+  if (weapons.length > 0) {
+    weaponsPhrase += formatItemListString(weapons);
+  }
+  else {
+    weaponsPhrase = "You have no weapons."
+  }
+
+  let largeItemsPhrase = "In your backpack you have a ";
+  if (largeItems.length > 0)  {
+    largeItemsPhrase += formatItemListString(largeItems)
+  }
+  else {
+    largeItemsPhrase = "You backpack is empty.";
+  }
+
+  let smallItemsPhrase = "In your pocket you have a ";
+  if (smallItems > 0){
+    smallItemsPhrase += formatItemListString(smallItems);
+  }
+
+  else {
+    smallItemsPhrase = "Your pockets are empty."
+  }
+
+  const itemsPhrase = weaponsPhrase + ' ' + largeItemsPhrase + ' ' + smallItemsPhrase;
+  return itemsPhrase;
+}
+
+const runApplication = () => {
+  const playerItems = getCurrentItems(genItemsIteratively(itemInfo));
+  const sortedPlayerItems = sortItemsByType(playerItems);
+  const itemPhrases = getItemPhrases(sortedPlayerItems)
+
+  return itemPhrases;
+}
+
+
+
+console.log(runApplication());
+//console.log(playerItems)
+//console.log(sortedPlayerItems);
+//console.log(itemPhrases);
+const printStory = () => {
+
+}
