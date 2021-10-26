@@ -32,9 +32,7 @@ const genItemsIteratively = array => {
 
 }
 
-//const items = genItemsIteratively(itemInfo);
-
-const rollItemRng = (rarityValue) => {
+const rollItemRng = rarityValue => {
   const randomValue = Math.random();
   if (randomValue <= rarityValue) {
     return true;
@@ -44,7 +42,7 @@ const rollItemRng = (rarityValue) => {
   }
 }
 
-const getCurrentItems = (array) => {
+const getCurrentItems = array => {
   const currentItems = [];
 
   for (item of array) {
@@ -79,7 +77,7 @@ const sortItemsByType = itemArray => {
   return sortedArray;
 }
 
-const formatItemListString = (array) => {
+const formatItemListString = array => {
   formattedList = '';
   //console.log(array);
   for (let i = 0; i < array.length; i++) {
@@ -102,7 +100,7 @@ const formatItemListString = (array) => {
   return formattedList;
 }
 
-const getItemPhrases = (itemsArray) => {
+const getItemPhrases = itemsArray => {
   //console.log(itemsArray);
   const weapons = itemsArray[0];
   const largeItems = itemsArray[1];
