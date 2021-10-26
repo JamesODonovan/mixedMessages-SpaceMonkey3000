@@ -1,7 +1,7 @@
 //Message Generator
-const itemInfo = [['Lazer Gun','Weapon', 0.1 ], ['Ray Gun', 'Weapon', 0.1], ['Light Sword', 'Weapon', 0.05], ['Sharpened Spoon', 'Weapon', 0.6], ['Pointy Stick', 'Weapon', 0.7], ['Combat Detection Unit', 'Large Item', 0.4], ['Rocket Backpack', 'Large Item', 0.1], ['Universal Translator', 'Large Item', 0.3], ['Teddy Bear Nanny Cam', 'Large Item', 0.4], ['Space Suit', 'Large Item', 0.3], ['Toothbrush', 'Small Item', 0.4], ['Quantum Radio', 'Small Item', 0.1], ['Brick', 'Small Item', 0.4], ['Car Keys', 'Small Item', 0.2], ['Wallet', 'Small Item', 0.5]];
+const itemInfo = [['Lazer Gun','Weapon', 0.1 ], ['Ray Gun', 'Weapon', 0.1], ['Light Sword', 'Weapon', 0.05], ['Sharpened Spoon', 'Weapon', 0.6], ['Pointy Stick', 'Weapon', 0.7], ['Combatant Detection Unit', 'Large Item', 0.4], ['Rocket Backpack', 'Large Item', 0.1], ['Universal Translator', 'Large Item', 0.3], ['Teddy Bear Nanny Cam', 'Large Item', 0.4], ['Space Suit', 'Large Item', 0.3], ['Toothbrush', 'Small Item', 0.4], ['Quantum Radio', 'Small Item', 0.1], ['Brick', 'Small Item', 0.4], ['Set of Keys', 'Small Item', 0.2], ['Wallet', 'Small Item', 0.5]];
 
-const genItem = (name, rarity, type) => {
+const itemFactory = (name, rarity, type) => {
   obj = {
     name: name,
     type: type,
@@ -10,29 +10,29 @@ const genItem = (name, rarity, type) => {
   return obj;
 }
 
-const genItemFromArray = itemStat => {
+const itemArrayToObject = itemStat => {
   const name = itemStat[0];
   const type = itemStat[1];
   const rarity = itemStat[2];
-  const itemObj = genItem(name, rarity, type);
+  const itemObj = itemFactory(name, rarity, type);
   return itemObj;
 }
 
-const genItemsIteratively = array => {
-  //console.log(`GenItemsIteratively Input Array -> ${array}`)
+const iteratateItemFactory = array => {
+  //console.log(`iteratateItemFactory Input Array -> ${array}`)
   const itemObjectArray = [];
   for (item of array) {
     //console.log(item)
-    itemObject = genItemFromArray(item);
+    itemObject = itemArrayToObject(item);
     //console.log(itemObject);
     itemObjectArray.push(itemObject);
   }
-  //console.log(`GenItemsIteratively -> Export ${itemObjectArray}`);
+  //console.log(`iteratateItemFactory -> Export ${itemObjectArray}`);
   return itemObjectArray;
 
 }
 
-const rollItemRng = rarityValue => {
+const rollItemChance = rarityValue => {
   const randomValue = Math.random();
   if (randomValue <= rarityValue) {
     return true;
@@ -42,11 +42,11 @@ const rollItemRng = rarityValue => {
   }
 }
 
-const getCurrentItems = array => {
+const getCurrentItems = allItems => {
   const currentItems = [];
 
-  for (item of array) {
-    const hasItem = rollItemRng(item.rarity);
+  for (item of allItems) {
+    const hasItem = rollItemChance(item.rarity);
     if (hasItem === true) {
       currentItems.push(item)
     }
@@ -55,12 +55,12 @@ const getCurrentItems = array => {
   return currentItems;
 }
 
-const sortItemsByType = itemArray => {
+const sortItemsByType = currentItems => {
   const weapons = [];
   const largeItems = [];
   const smallItems = [];
 
-  for (item of itemArray) {
+  for (item of currentItems) {
     if (item.type === 'Weapon') {
       weapons.push(item);
     }
@@ -71,48 +71,49 @@ const sortItemsByType = itemArray => {
       smallItems.push(item)
     }
   }
-  sortedArray = [weapons, largeItems, smallItems]
+  const sortedItems = [weapons, largeItems, smallItems]
 
-  //console.log(`sortItemsByType Export -> ${sortedArray}`)
-  return sortedArray;
+  console.log(`sortItemsByType Export -> ${sortedItems}`)
+  return sortedItems;
 }
 
-const formatItemListString = array => {
-  formattedList = '';
-  //console.log(array);
-  for (let i = 0; i < array.length; i++) {
-    const currentItemName = array[i].name;
+const formattedItemListToString = itemsArray => {
+  formattedItemString = '';
+  //console.log(itemsArray);
+  for (let i = 0; i < itemsArray.length; i++) {
+    const currentItemName = itemsArray[i].name;
   //  console.log(i)
 
-    if (i !== (array.length-1)) {
-      formattedList += (currentItemName + ", ")
+    if (i !== (itemsArray.length-1)) {
+      formattedItemString += (currentItemName + ", ")
       //console.log(currentItemName);
     }
     else {
-      if (array.length === 1){
-        formattedList += (currentItemName + '.')
+      if (itemsArray.length === 1){
+        formattedItemString += (currentItemName + '.')
       }
       else {
-        formattedList += ('and a ' + currentItemName +".");
+        formattedItemString += ('and a ' + currentItemName +".");
       }
     }
   }
-  return formattedList;
+  return formattedItemString;
 }
 
-const getItemPhrases = itemsArray => {
-  //console.log(itemsArray);
-  const weapons = itemsArray[0];
-  const largeItems = itemsArray[1];
-  const smallItems = itemsArray[2];
+const genItemPhrase = currentItems => {
+  //console.log(currentItems);
+  const weapons = currentItems[0];
+  const largeItems = currentItems[1];
+  const smallItems = currentItems[2];
   //console.log(`Weapons array: ${weapons}`);
   //console.log(weapons === undefined)
   //console.log(largeItems);
-  //console.log(smallItems);
+  console.log(smallItems);
+  console.log(smallItems.length)
 
   let weaponsPhrase = "You are armed with a ";
   if (weapons.length > 0) {
-    weaponsPhrase += formatItemListString(weapons);
+    weaponsPhrase += formattedItemListToString(weapons);
   }
   else {
     weaponsPhrase = "You have no weapons."
@@ -120,15 +121,15 @@ const getItemPhrases = itemsArray => {
 
   let largeItemsPhrase = "In your backpack you have a ";
   if (largeItems.length > 0)  {
-    largeItemsPhrase += formatItemListString(largeItems)
+    largeItemsPhrase += formattedItemListToString(largeItems)
   }
   else {
     largeItemsPhrase = "Your backpack is empty.";
   }
 
   let smallItemsPhrase = "In your pocket you have a ";
-  if (smallItems > 0){
-    smallItemsPhrase += formatItemListString(smallItems);
+  if (smallItems.length > 0){
+    smallItemsPhrase += formattedItemListToString(smallItems);
   }
 
   else {
@@ -157,8 +158,8 @@ const getRandomPairOfCards = () => {
 }
 const playerCards = getRandomPairOfCards();
 
-const locationPhrases = [['You find yourself in the cargo bay of a mid sized spacecraft. Out the small viewing bay you see your home planet start to drift into the distance.'], ['Great structures jut out of the ground, strange artifacts float through the planets sky.'], ["In one of the most secure prison wards in this galaxy's quadrant..."], ['lively music plays in the background, drowned out by the patrons chattering over it, as you sip on your cool drink...'], ['Deep within the cave systems of one of the outer planets...']];
-const scenarioPhrases = [["You futilely attempt to force your way out of the cell. Blue sparks scatter through the air as you pull your hand back, leaving a numbing sting in your fingertips. The guard in the distance didn't seem to notice however..."], ["Indigo smoke swirls around the feet of a dark robed figure standing in front a shimmering table etched with archaic runes. As you are dragged towards the apparition you see that it is brandishing a twisted knife with a black blade and gold jeweled hilt."], ["In front of you, caged, a blue and green alien with long tentacle appendages cries out to you in a language you cannot understand."], [`Sitting around a table, you look around at your fellow players, lifting up just the tips of the cards you see you have a ${playerCards[0]} and a ${playerCards[1]}, the air feels tense.`], ['Ushered into a small doorway hidden out of plain view, you walk down a cold metal hallway into the back room. Greeted by a large slug alien, he directs you to the table of wares in front of him.']];
+const locationPhrases = ['You find yourself in the cargo bay of a mid sized spacecraft. Out the small viewing bay, on the opposing wall, you see your home planet start to drift into the distance.', 'Great structures jut out of the ground, strange artifacts float through the planets sky.', "In one of the most secure prison wards in this galaxy's quadrant...", 'Drowned out by the patrons chattering over it, lively music faintly plays in the background,  as you sip on a cool drink...', 'Deep within the cave systems of one of the outer planets...'];
+const scenarioPhrases = ["You futilely attempt to force your way out of the cell. Blue sparks scatter through the air as you pull your hand back, leaving a numbing sting in your fingertips. The guard in the distance didn't seem to notice however...", "Indigo smoke swirls around the feet of a dark robed figure standing in front a shimmering table etched with archaic runes. As you are dragged towards the apparition you see that it is brandishing a twisted knife with a black blade and gold jeweled hilt.", "In front of you, caged, a blue and green alien with long tentacle appendages cries out to you in a language you cannot understand.", `Sitting around a table, you look around at your fellow players, lifting up just the tips of the cards you see you have a ${playerCards[0]} and a ${playerCards[1]}, the air feels tense.`, 'Ushered into a small doorway hidden out of plain view, you walk down a cold metal hallway into a dimly lit back room. Greeted by a large slug alien, he directs you to the table of wares in front of him.'];
 
 const randomLocation = locationPhrases[Math.floor(Math.random() * locationPhrases.length)];
 const randomScenario = scenarioPhrases[Math.floor(Math.random() * scenarioPhrases.length)];
@@ -168,16 +169,17 @@ const randomPhrase = (stringArray) => {
 }
 
 
-const runApplication = () => {
-  randomLocationString = randomPhrase(locationPhrases)
-  randomScenarioString = randomPhrase(scenarioPhrases)
+const runScript= () => {
+  const randomLocationString = randomPhrase(locationPhrases);
+  const randomScenarioString = randomPhrase(scenarioPhrases);
 
-  const playerItems = getCurrentItems(genItemsIteratively(itemInfo));
+  const playerItems = getCurrentItems(iteratateItemFactory(itemInfo));
   const sortedPlayerItems = sortItemsByType(playerItems);
-  const itemPhrases = getItemPhrases(sortedPlayerItems)
+  const itemPhrases = genItemPhrase(sortedPlayerItems);
 
 
-  return randomLocationString + " " + randomScenarioString + " " + itemPhrases;
+  const fullMessage = randomLocationString + " " + randomScenarioString + " " + itemPhrases;
+  console.log(fullMessage);
 }
 
-console.log(runApplication());
+runScript();
