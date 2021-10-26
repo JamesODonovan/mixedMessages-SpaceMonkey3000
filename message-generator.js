@@ -19,17 +19,12 @@ const itemArrayToObject = itemStat => {
 }
 
 const iteratateItemFactory = array => {
-  //console.log(`iteratateItemFactory Input Array -> ${array}`)
   const itemObjectArray = [];
   for (item of array) {
-    //console.log(item)
     itemObject = itemArrayToObject(item);
-    //console.log(itemObject);
     itemObjectArray.push(itemObject);
   }
-  //console.log(`iteratateItemFactory -> Export ${itemObjectArray}`);
   return itemObjectArray;
-
 }
 
 const rollItemChance = rarityValue => {
@@ -51,7 +46,6 @@ const getCurrentItems = allItems => {
       currentItems.push(item)
     }
   }
-  //console.log(`getCurrentItems Export -> ${currentItems}`)
   return currentItems;
 }
 
@@ -72,21 +66,16 @@ const sortItemsByType = currentItems => {
     }
   }
   const sortedItems = [weapons, largeItems, smallItems]
-
-  console.log(`sortItemsByType Export -> ${sortedItems}`)
   return sortedItems;
 }
 
 const formattedItemListToString = itemsArray => {
   formattedItemString = '';
-  //console.log(itemsArray);
   for (let i = 0; i < itemsArray.length; i++) {
     const currentItemName = itemsArray[i].name;
-  //  console.log(i)
 
     if (i !== (itemsArray.length-1)) {
       formattedItemString += (currentItemName + ", ")
-      //console.log(currentItemName);
     }
     else {
       if (itemsArray.length === 1){
@@ -101,15 +90,9 @@ const formattedItemListToString = itemsArray => {
 }
 
 const genItemPhrase = currentItems => {
-  //console.log(currentItems);
   const weapons = currentItems[0];
   const largeItems = currentItems[1];
   const smallItems = currentItems[2];
-  //console.log(`Weapons array: ${weapons}`);
-  //console.log(weapons === undefined)
-  //console.log(largeItems);
-  console.log(smallItems);
-  console.log(smallItems.length)
 
   let weaponsPhrase = "You are armed with a ";
   if (weapons.length > 0) {
@@ -161,8 +144,6 @@ const playerCards = getRandomPairOfCards();
 const locationPhrases = ['You find yourself in the cargo bay of a mid sized spacecraft. Out the small viewing bay, on the opposing wall, you see your home planet start to drift into the distance.', 'Great structures jut out of the ground, strange artifacts float through the planets sky.', "In one of the most secure prison wards in this galaxy's quadrant...", 'Drowned out by the patrons chattering over it, lively music faintly plays in the background,  as you sip on a cool drink...', 'Deep within the cave systems of one of the outer planets...'];
 const scenarioPhrases = ["You futilely attempt to force your way out of the cell. Blue sparks scatter through the air as you pull your hand back, leaving a numbing sting in your fingertips. The guard in the distance didn't seem to notice however...", "Indigo smoke swirls around the feet of a dark robed figure standing in front a shimmering table etched with archaic runes. As you are dragged towards the apparition you see that it is brandishing a twisted knife with a black blade and gold jeweled hilt.", "In front of you, caged, a blue and green alien with long tentacle appendages cries out to you in a language you cannot understand.", `Sitting around a table, you look around at your fellow players, lifting up just the tips of the cards you see you have a ${playerCards[0]} and a ${playerCards[1]}, the air feels tense.`, 'Ushered into a small doorway hidden out of plain view, you walk down a cold metal hallway into a dimly lit back room. Greeted by a large slug alien, he directs you to the table of wares in front of him.'];
 
-const randomLocation = locationPhrases[Math.floor(Math.random() * locationPhrases.length)];
-const randomScenario = scenarioPhrases[Math.floor(Math.random() * scenarioPhrases.length)];
 
 const randomPhrase = (stringArray) => {
   return stringArray[(Math.floor(Math.random() * stringArray.length))]
